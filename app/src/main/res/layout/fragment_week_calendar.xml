@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WeekCalendarFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <GridLayout
+            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFFFF"
+            android:columnCount="7"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="일"
+                    android:textColor="#FF000000"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="월"
+                    android:textColor="#FF000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="화"
+                    android:textColor="#FF000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="수"
+                    android:textColor="#FF000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="목"
+                    android:textColor="#FF000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="금"
+                    android:textColor="#FF000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/week_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="토"
+                    android:textColor="#FF000000" />
+            </LinearLayout>
+
+        </GridLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.hansung.android.calendar2.FixedGridView
+                    android:id="@+id/hour_grid"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:numColumns="1"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="2dp"
+                    android:horizontalSpacing="2dp"
+                    />
+                <com.hansung.android.calendar2.FixedGridView
+                    android:id="@+id/schedule_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:numColumns="7"
+                    android:stretchMode="columnWidth"
+                    android:paddingLeft="3dp"
+                    android:background="#555555"
+                    android:verticalSpacing="2dp"
+                    android:horizontalSpacing="2dp"
+                    />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</FrameLayout>
