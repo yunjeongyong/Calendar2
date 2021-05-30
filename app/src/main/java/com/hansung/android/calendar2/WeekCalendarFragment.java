@@ -105,6 +105,8 @@ public class WeekCalendarFragment extends Fragment {
 //                int y = position / 7;
 //                String message = day + "일 " + hour + "시 / position=(" + x + "," + y + ")";
 
+                DateInfo.getInstance().setHour(position / 7);
+
                 // "position=(눌린 블록의 x좌표)" 형태로 출력
                 Toast.makeText(getActivity(), "position=" + (position % 7), Toast.LENGTH_SHORT).show();
             }
@@ -158,6 +160,8 @@ public class WeekCalendarFragment extends Fragment {
     public static WeekCalendarFragment newInstance(int[] daySeven, int year, int month) {
         // 새로운 WeekCalendarFragment fragment 객체 생성
         WeekCalendarFragment fragment = new WeekCalendarFragment();
+
+        DateInfo.getInstance().set(year, month, daySeven[0], 0);
 
         Bundle args = new Bundle();
         // fragment에 아까 전달받은 날짜 배열을 day1, day2, ..., day7 형태로 전달

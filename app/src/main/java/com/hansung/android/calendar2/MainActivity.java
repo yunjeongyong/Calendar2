@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,8 +24,24 @@ public class MainActivity extends AppCompatActivity {
         // 앱이 실행되면 기본적으로 MonthViewFragment를 보여줌
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_container, new MonthViewFragment());
+        fragmentTransaction.add(R.id.frameLayout, new MonthViewFragment());
         fragmentTransaction.commit();
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
+
+                DateInfo dateInfo = DateInfo.getInstance();
+                intent.putExtra("year", dateInfo.getYear());
+                intent.putExtra("month", dateInfo.getMonth());
+                intent.putExtra("date", dateInfo.getDate());
+                intent.putExtra("hour", dateInfo.getHour());
+
+                startActivity(intent);
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.monthview:
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container, new MonthViewFragment());
+                fragmentTransaction.add(R.id.frameLayout, new MonthViewFragment());
                 fragmentTransaction.commit();
                 Toast.makeText(getApplicationContext(), "monthview", Toast.LENGTH_SHORT).show();
                 return true;
@@ -46,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.weekview:
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container, new WeekViewFragment());
+                fragmentTransaction.add(R.id.frameLayout, new WeekViewFragment());
                 fragmentTransaction.commit();
                 Toast.makeText(getApplicationContext(), "weekview", Toast.LENGTH_SHORT).show();
                 return true;

@@ -63,6 +63,8 @@ public class MonthCalendarFragment extends Fragment {
         // 새로운 MonthCalendarFragment fragment 생성
         MonthCalendarFragment fragment = new MonthCalendarFragment();
 
+        DateInfo.getInstance().set(year, month, 1);
+
         // 생성한 fragment에 파라미터로 입력받았던 year와 month를 전달
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, year);
@@ -106,8 +108,11 @@ public class MonthCalendarFragment extends Fragment {
                 // 첫 날 이상 마지막 날 이하일 경우 토스트메시지 발생.
                 if ((0 < position-firstDay+1) && (position-firstDay+1)<(firstDay+totDays)) {
                     // ex) 2021/4/21
-                    Toast.makeText(getActivity(), (iYear) + "." + (iMonth + 1) + "." + (position - firstDay + 1) + "일", Toast.LENGTH_SHORT).show();
+                    final int date = position - firstDay + 1;
+                    Toast.makeText(getActivity(), (iYear) + "." + (iMonth + 1) + "." + date + "일", Toast.LENGTH_SHORT).show();
                     ((MainActivity) getActivity()).setTitle(iYear + "년 " + (iMonth + 1) + "월");
+
+                    DateInfo.getInstance().setDate(date);
 
                     // 배경색을 바꾸기 위해 눌린 view로부터 TextView 가져옴
                     TextView textView = (TextView) view.findViewById(R.id.tv_item_gridview);
