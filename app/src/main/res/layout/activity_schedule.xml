@@ -1,139 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginLeft="68dp"
-        android:layout_marginTop="28dp"
-        android:text="제목"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="제목"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/schedule_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/schedule_title"
-        android:layout_width="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="68dp"-->
+<!--        android:layout_marginLeft="68dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:text="제목"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/schedule_title"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="68dp"-->
+<!--        android:layout_marginRight="68dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textPersonName"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginRight="68dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="시작" />
+        <TimePicker
+            android:id="@+id/schedule_start"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:timePickerMode="spinner" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginLeft="48dp"
-        android:layout_marginBottom="92dp"
-        android:text="시작"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="종료" />
+        <TimePicker
+            android:id="@+id/schedule_end"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:timePickerMode="spinner" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="48dp"-->
+<!--        android:layout_marginLeft="48dp"-->
+<!--        android:layout_marginBottom="92dp"-->
+<!--        android:text="시작"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/textView3"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="4dp"-->
+<!--        android:layout_marginLeft="4dp"-->
+<!--        android:text="종료"-->
+<!--        app:layout_constraintBaseline_toBaselineOf="@+id/schedule_end"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/textView2" />-->
+
+<!--    <TimePicker-->
+<!--        android:id="@+id/schedule_start"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="76dp"-->
+<!--        android:layout_marginEnd="36dp"-->
+<!--        android:layout_marginRight="36dp"-->
+<!--        android:ems="10"-->
+<!--        android:timePickerMode="spinner"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <TimePicker-->
+<!--        android:id="@+id/schedule_end"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginRight="32dp"-->
+<!--        android:ems="10"-->
+<!--        android:timePickerMode="spinner"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/schedule_start" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:text="종료"
-        app:layout_constraintBaseline_toBaselineOf="@+id/schedule_end"
-        app:layout_constraintStart_toStartOf="@+id/textView2" />
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/schedule_place"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="장소" />
+        <Button
+            android:id="@+id/schedule_find_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="찾기" />
+    </LinearLayout>
 
-    <TimePicker
-        android:id="@+id/schedule_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
-        android:ems="10"
-        android:timePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <EditText-->
+<!--        android:id="@+id/schedule_place"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="47dp"-->
+<!--        android:layout_marginStart="39dp"-->
+<!--        android:layout_marginLeft="39dp"-->
+<!--        android:layout_marginEnd="9dp"-->
+<!--        android:layout_marginRight="9dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:text="장소"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/schedule_find_btn"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.609" />-->
 
-    <TimePicker
-        android:id="@+id/schedule_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:ems="10"
-        android:timePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/schedule_start" />
-
-    <EditText
-        android:id="@+id/schedule_place"
-        android:layout_width="0dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="39dp"
-        android:layout_marginLeft="39dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginRight="9dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="장소"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/schedule_find_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.609" />
-
-    <Button
-        android:id="@+id/schedule_find_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:text="찾기"
-        app:layout_constraintBaseline_toBaselineOf="@+id/schedule_place"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/schedule_place" />
+<!--    <Button-->
+<!--        android:id="@+id/schedule_find_btn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="12dp"-->
+<!--        android:layout_marginRight="12dp"-->
+<!--        android:text="찾기"-->
+<!--        app:layout_constraintBaseline_toBaselineOf="@+id/schedule_place"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/schedule_place" />-->
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/schedule_mapView"
-        android:layout_width="0dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/schedule_memo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/schedule_find_btn"
-        app:layout_constraintVertical_bias="1.0" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/schedule_memo"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="37dp"
-        android:layout_marginLeft="37dp"
-        android:layout_marginEnd="37dp"
-        android:layout_marginRight="37dp"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="메모"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="메모" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/schedule_save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="저장" />
+        <Button
+            android:id="@+id/schedule_cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="취소" />
+        <Button
+            android:id="@+id/schedule_del_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="삭제" />
+    </LinearLayout>
+
+<!--    <com.google.android.gms.maps.MapView-->
+<!--        android:id="@+id/schedule_mapView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="65dp"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginLeft="32dp"-->
+<!--        android:layout_marginTop="36dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:layout_marginRight="32dp"-->
+<!--        android:layout_marginBottom="32dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/schedule_memo"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/schedule_find_btn"-->
+<!--        app:layout_constraintVertical_bias="1.0" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/schedule_memo"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="64dp"-->
+<!--        android:layout_marginStart="37dp"-->
+<!--        android:layout_marginLeft="37dp"-->
+<!--        android:layout_marginEnd="37dp"-->
+<!--        android:layout_marginRight="37dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:gravity="start|top"-->
+<!--        android:hint="메모"-->
+<!--        android:inputType="textMultiLine"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+</LinearLayout>
