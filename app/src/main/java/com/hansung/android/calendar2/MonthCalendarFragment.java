@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,8 @@ public class MonthCalendarFragment extends Fragment {
     // 각 블록은 LinearLayout 안에 TextView로 정의되어 있기 때문에, 블록 선택 시에는 TextView를 선택
     // 블록이 선택되었을 때 이전에 선택된 블록의 배경색은 다시 흰색으로 바꿔야 하기 떄문에 이전에 선택된 블록을 이 prevBlock에 저장
     // prevBlock의 첫 값은 이 달의 첫날
-    private TextView prevBlock;
+//    private TextView prevBlock;
+    private LinearLayout prevBlock;
 
     public MonthCalendarFragment() {
         // Required empty public constructor
@@ -115,19 +117,20 @@ public class MonthCalendarFragment extends Fragment {
                     DateInfo.getInstance().setDate(date);
 
                     // 배경색을 바꾸기 위해 눌린 view로부터 TextView 가져옴
-                    TextView textView = (TextView) view.findViewById(R.id.tv_item_gridview);
+//                    TextView textView = (TextView) view.findViewById(R.id.tv_item_gridview);
+                    LinearLayout layout = view.findViewById(R.id.tv_layout);
                     // 배경색 변경
-                    textView.setBackgroundColor(Color.CYAN);
+//                    textView.setBackgroundColor(Color.CYAN);
+                    layout.setBackgroundColor(Color.CYAN);
 
                     // 이전에 눌렸던 블록의 배경색을 흰색으로 변경
                     prevBlock.setBackgroundColor(Color.WHITE);
                     // 현재 눌린 블록을 prevBlock으로 설정
-                    prevBlock = textView;
+                    prevBlock = layout;
                 }
             }
         });
 
-//        return inflater.inflate(R.layout.fragment_month_calendar, container, false);
         return v;
     }
 
@@ -172,11 +175,14 @@ public class MonthCalendarFragment extends Fragment {
             }
             // calendar_gridview 레이아웃 안의 tv_item_gridview TextView를 가져옴
             TextView textView = (TextView) convertView.findViewById(R.id.tv_item_gridview);
+            // gridview의 블록에 해당하는 레이아웃을 가져옴
+            LinearLayout layout = convertView.findViewById(R.id.tv_layout);
             // 그 TextView의 글자를 days 배열의 원소로 설정
             textView.setText(days[position]);
             if ( position == firstDay ) {   // 첫날의 데이터를 넣는 중일 경우 배경색을 CYAN으로 설정 및 prevBlock에 이 블록 저장
-                textView.setBackgroundColor(Color.CYAN);
-                prevBlock = textView;
+//                textView.setBackgroundColor(Color.CYAN);
+                layout.setBackgroundColor(Color.CYAN);
+                prevBlock = layout;
             }
 
             // 설정된 convertView 반환

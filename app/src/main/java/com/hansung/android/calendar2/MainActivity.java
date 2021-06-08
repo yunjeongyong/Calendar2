@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DBHelper helper = new DBHelper(MainActivity.this, "calendar.db", null, 1);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        helper.onCreate(db);
 
         // 앱이 실행되면 기본적으로 MonthViewFragment를 보여줌
         FragmentManager fragmentManager = getSupportFragmentManager();
