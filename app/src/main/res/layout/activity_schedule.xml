@@ -9,6 +9,9 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -32,7 +35,7 @@
                 />
             <EditText
                 android:id="@+id/schedule_title"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
                 />
         </LinearLayout>
@@ -77,8 +80,6 @@
                 android:gravity="center"/>
         </LinearLayout>
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,16 +99,20 @@
                 android:text="찾기" />
         </LinearLayout>
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/schedule_mapView"
+        <fragment
+            android:id="@+id/schedule_map"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"/>
+            android:layout_height="150dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
 
         <EditText
             android:id="@+id/schedule_memo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:lines="3"
+            android:gravity="start"
+            android:inputType="textMultiLine"
+            android:scrollHorizontally="false"
             android:hint="메모" />
 
         <LinearLayout

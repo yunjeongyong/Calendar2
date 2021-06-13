@@ -1,9 +1,12 @@
 package com.hansung.android.calendar2;
 
+// 날짜 및 시간 선택 시 선택된 정보를 담아두기 위한 클래스
 public class DateInfo {
 
     private static final DateInfo instance = new DateInfo();
 
+    // 연,월,일,시간
+    // 기본값은 -1
     private int year;
     private int month;
     private int date;
