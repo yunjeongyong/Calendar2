@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WeekCalendarFragment extends Fragment {
@@ -32,10 +34,10 @@ public class WeekCalendarFragment extends Fragment {
     // 주간 달력에서 현재 주의 날짜가 어떤 날들인지 저장하는 배열
     private int[] daySeven;
     // 일정 데이터가 들어갈 배열
-    private String[] schedules;
+    private String[] labels;
+    private ArrayList<Schedule> schedules;
 
     // 블록 선택 효과를 만들기 위해 정의한 객체
-    // 각 블록은 LinearLayout 안에 TextView로 정의되어 있기 때문에, 블록 선택 시에는 TextView를 선택
     // 블록이 선택되었을 때 이전에 선택된 블록의 배경색은 다시 흰색으로 바꿔야 하기 떄문에 이전에 선택된 블록을 이 prevBlock에 저장
     // prevBlock의 첫 값은 이 스케줄의 처음
     private TextView prevBlock;
@@ -56,10 +58,13 @@ public class WeekCalendarFragment extends Fragment {
                 daySeven[i] = getArguments().getInt("day" + (i+1));
             }
 
-            // schedules 배열 초기화 및 공백으로 채워넣음
-            // schedules 배열은 일주일에 각 24시간씩의 스케줄이 있으므로 7*24개
-            schedules = new String[7 * 24];
-            Arrays.fill(schedules, "");
+            // labels 배열 초기화 및 공백으로 채워넣음
+            // labels 배열은 일주일에 각 24시간씩의 스케줄이 있으므로 7*24개
+            labels = new String[7 * 24];
+            Arrays.fill(labels, "");
+
+            DBHelper helper = new DBHelper(getActivity().getApplicationContext(), "calendar.db", null, 1);
+            schedules = helper.getSchedulesInDays(iYear, iMonth, daySeven);
         }
     }
 
@@ -74,7 +79,7 @@ public class WeekCalendarFragment extends Fragment {
         // schedules 배열을 바탕으로 ScheduleAdapter 어댑터 객체 생성
         // 스케줄 GridView에 ScheduleAdapter 어댑터를 설정
         // gridView는 fragment_week_calender의 schedule_grid
-        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity().getApplicationContext(), schedules);
+        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity().getApplicationContext(), labels, schedules);
         GridView gridView = v.findViewById(R.id.schedule_grid);
         gridView.setAdapter(scheduleAdapter);
 
@@ -178,13 +183,16 @@ public class WeekCalendarFragment extends Fragment {
     // 스케줄 GridView의 데이터를 채워넣기 위한 GridAdapter 내부클래스
     private class ScheduleAdapter extends BaseAdapter {
 
-        // 스케줄 데이터 배열
-        private String[] schedules;
+        // 블록에 적힐 텍스트 배열
+        private final String[] labels;
+        // 스케줄 데이터 리스트
+        private final ArrayList<Schedule> schedules;
         // LayoutInflater 객체 생성.
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
-        public ScheduleAdapter(Context context, String[] schedules) {
-            // 매개변수로 입력 받은 schedules로 schedules 배열 초기화.
+        public ScheduleAdapter(Context context, String[] labels, ArrayList<Schedule> schedules) {
+            this.labels = labels;
+            // 매개변수로 입력 받은 schedules로 schedules 리스트 초기화.
             this.schedules = schedules;
             //context에서 LayoutInflater 가져옴.
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -193,13 +201,13 @@ public class WeekCalendarFragment extends Fragment {
         // 배열 크기 반환
         @Override
         public int getCount() {
-            return schedules.length;
+            return labels.length;
         }
 
         // 배열 position번째의 원소 반환
         @Override
         public String getItem(int position) {
-            return schedules[position];
+            return labels[position];
         }
 
         // 몇번째인지 반환
@@ -212,10 +220,21 @@ public class WeekCalendarFragment extends Fragment {
             // convertView는 그리드의 한 블락(하나의 뷰)
             // calendar_week_gridview.xml파일을 View객체로 만들어서 반환.
             if ( convertView == null ) convertView = inflater.inflate(R.layout.calendar_week_gridview, null);
+
+            // schedules 리스트로부터 블록의 날짜, 시간에 해당하는 일정을 labels[position]에 더함
+            for (Schedule s : schedules) {
+                if ( s.date == daySeven[position % 7] && s.startHour == position / 7 ) {
+                    // 여러 일정이 있을 경우 \n으로 구분
+                    labels[position] += s.title + '\n';
+                }
+            }
+            // trim을 통해 마지막의 \n 제거
+            labels[position] = labels[position].trim();
+
             // calendar_week_gridview 레이아웃 안의 week_tv_item_gridview TextView를 가져옴
             TextView textView = (TextView) convertView.findViewById(R.id.week_tv_item_gridview);
-            // 그 TextView의 글자를 schedules 배열의 원소로 설정
-            textView.setText(schedules[position]);
+            // 그 TextView의 글자를 labels 배열의 원소로 설정
+            textView.setText(labels[position]);
             if ( position == 0 ) {  // 처음의 데이터를 넣는 중일 경우 배경색을 CYAN으로 설정 및 prevBlock에 이 블록 저장
                 textView.setBackgroundColor(Color.CYAN);
                 prevBlock = textView;
@@ -229,9 +248,9 @@ public class WeekCalendarFragment extends Fragment {
     private class TimeAdapter extends BaseAdapter {
 
         // 시간대 데이터 배열
-        private String[] times;
+        private final String[] times;
         // LayoutInflater 객체 생성.
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
         public TimeAdapter(Context context) {
             // 시간대 배열 직접 설정 (0~23의 숫자 입력)

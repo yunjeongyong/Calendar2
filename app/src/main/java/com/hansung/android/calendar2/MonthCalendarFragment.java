@@ -41,6 +41,7 @@ public class MonthCalendarFragment extends Fragment {
     private int totDays;    // 그 달의 마지막 날
 
     private String[] days;  // 달력 데이터가 들어갈 배열
+    private ArrayList<Schedule> schedules;
 
     // 블록 선택 효과를 만들기 위해 정의한 객체
     // 각 블록은 LinearLayout 안에 TextView로 정의되어 있기 때문에, 블록 선택 시에는 TextView를 선택
@@ -88,6 +89,9 @@ public class MonthCalendarFragment extends Fragment {
             ((MainActivity) getActivity()).setTitle(iYear + "년 " + (iMonth + 1) + "월"); // 앱바 타이틀 설정
 
             setCalendar(iYear, iMonth); //mYear와 mMonth를 바탕으로 days에 데이터를 채움.
+
+            DBHelper helper = new DBHelper(getActivity().getApplicationContext(), "calendar.db", null, 1);
+            schedules = helper.getSchedules("sch_year", iYear, "sch_month", iMonth);
         }
     }
 
@@ -99,7 +103,7 @@ public class MonthCalendarFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_month_calendar, container, false);
 
         //그리드 어댑터에 날짜 배열(days)을 넣어줌.
-        GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext(), days);
+        GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext(), days, schedules);
         GridView gridView = v.findViewById(R.id.gridview);
         gridView.setAdapter(gridAdapter); //그리드뷰에 어댑터설정.
 
@@ -141,12 +145,16 @@ public class MonthCalendarFragment extends Fragment {
         private final String[] days;
         // LayoutInflater 객체 생성.
         private final LayoutInflater inflater;
+        // 일정 데이터 리스트
+        private final ArrayList<Schedule> schedules;
 
-        public GridAdapter(Context context, String[] days) {
-            // 매개변수로 입력 받은 days로 days 배열 초기화.
-            this.days = days;
+        public GridAdapter(Context context, String[] days, ArrayList<Schedule> schedules) {
             //context에서 LayoutInflater 가져옴.
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            // 매개변수로 입력 받은 days로 days 배열 초기화.
+            this.days = days;
+            // 매개변수로 입력 받은 schedules로 schedules 리스트 초기화
+            this.schedules = schedules;
         }
 
         // 배열 크기 반환
@@ -179,8 +187,28 @@ public class MonthCalendarFragment extends Fragment {
             LinearLayout layout = convertView.findViewById(R.id.tv_layout);
             // 그 TextView의 글자를 days 배열의 원소로 설정
             textView.setText(days[position]);
+
+            TextView[] scheduleViews = {
+                    (TextView) convertView.findViewById(R.id.month_schedule_title),
+                    (TextView) convertView.findViewById(R.id.month_schedule_title2)
+            };
+            int[] colors = { Color.GREEN, Color.CYAN };
+            int cursor = 0;
+
+            for (int i = 0; i < schedules.size() && cursor < scheduleViews.length; i++) {
+                try {
+                    if ( schedules.get(i).date == Integer.parseInt(days[position]) ) {
+                        scheduleViews[cursor].setText(schedules.get(i).title);
+                        scheduleViews[cursor].setBackgroundColor(colors[cursor]);
+                        scheduleViews[cursor].setVisibility(View.VISIBLE);
+                        cursor++;
+                    }
+                } catch (NumberFormatException e) {
+                    // days[position]이 공백일 경우 (무시)
+                }
+            }
+
             if ( position == firstDay ) {   // 첫날의 데이터를 넣는 중일 경우 배경색을 CYAN으로 설정 및 prevBlock에 이 블록 저장
-//                textView.setBackgroundColor(Color.CYAN);
                 layout.setBackgroundColor(Color.CYAN);
                 prevBlock = layout;
             }

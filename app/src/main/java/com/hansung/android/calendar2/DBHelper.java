@@ -9,16 +9,17 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class DBHelper extends SQLiteOpenHelper {
-    private static final String TAG = "[[SQLiteDB]]";
+public class DBHelper extends SQLiteOpenHelper { //DB와 안드로이드를 연결시키기 위한 징검다리 역할 : DBHelper, SQLiteOpenHelper를 상속해서 만들었다.
+    private static final String TAG = "[[SQLiteDB]]"; //에러 디버깅할 때 태그에 쓰기 위해서 선언함.
 
-    private static final String TYPE_TEXT = "text";
-    private static final String TYPE_INT = "integer";
+    private static final String TYPE_TEXT = "text"; // 컬럼의 타입이 "text"타입이라는 것을 지정하기 위해 선언.
+    private static final String TYPE_INT = "integer"; // 위와 동일하게 인티저로 지정.
 
-    private static final String[][] columns = {
+    private static final String[][] columns = { // 컬럼 정보를 모아 놓은 배열.
         {
             "title",
             "place",
@@ -43,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
             TYPE_INT
         }
     };
-    private static final HashMap<String, String> columnMap = new HashMap<>(columns[0].length);
+    private static final HashMap<String, String> columnMap = new HashMap<>(columns[0].length); // 컬럼 정보를 모아 놓은 맵.
 
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -70,6 +71,7 @@ public class DBHelper extends SQLiteOpenHelper {
         for (int i=0; i<last; i++) sqlBuilder.append(t.generateInsertPhrase(columns[0][i], columns[1][i]));
         sqlBuilder.append(t.generateInsertPhrase(columns[0][last], columns[1][last], true));
         sqlBuilder.append(')');
+        db.execSQL("drop table if exists schedules");
         db.execSQL(sqlBuilder.toString());
     }
 
@@ -80,10 +82,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    private String f(String s, Object... args) {
+        return String.format(s, args);
+    }
+
     public void insertSchedule(Schedule s) {
         try {
-            String sql = String.format(
-                    Locale.KOREA,
+            String sql = f(
                     "insert into schedules (%s) values ('%s','%s','%s',%d,%d,%d,%d,%d,%d,%d)",
                     TextUtils.join(",", columns[0]),
                     s.title,
@@ -99,43 +104,36 @@ public class DBHelper extends SQLiteOpenHelper {
             );
             getWritableDatabase().execSQL(sql);
 
-            ArrayList<Schedule> schedules = getSchedules();
-            String res = "";
-            for (Schedule schedule : schedules) res += schedule.toString() + '\n';
-            Log.i(TAG, res);
-
-
         } catch(SQLException e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
-    public ArrayList<Schedule> getSchedules(Object ...args) {
+    public ArrayList<Schedule> getSchedules(Object ...args) {//DB에서 일정들을 가져옴
         try {
-            StringBuilder whereBuilder = new StringBuilder();
+            // where 부분을 만들기 위한 builder
+            String where = "";
+            // 인자로 받은 args가 있을 경우
             if ( args.length > 0 ) {
-                whereBuilder.append(" where ");
-                for (int i = 0, j = 0; i < args.length / 2; i += 2, j++) {
-                    whereBuilder.append(args[i]);
-                    whereBuilder.append('=');
+                String[] conditions = new String[args.length / 2];
+                for (int i = 0, j = 0; i < args.length; i += 2, j++) {
+                    conditions[j] = args[i] + "=";
                     switch (columnMap.get(args[i])) {
                         case TYPE_TEXT:
-                            whereBuilder.append('\'');
-                            whereBuilder.append(args[i + 1]);
-                            whereBuilder.append('\'');
+                            conditions[j] += "'" + args[i + 1] + "'";
                             break;
                         case TYPE_INT:
-                            whereBuilder.append(args[i + 1]);
+                            conditions[j] += args[i + 1];
                     }
-                    if ( j != args.length - 1 ) whereBuilder.append(" and ");
                 }
+                where = " where " + TextUtils.join(" and ", conditions);
             }
 
-            String sql = "select * from schedules" + whereBuilder.toString();
+            String sql = "select * from schedules" + where; //컬럼 전체를 표로부터 가져와라. schedules는 표, 테이블 이름이다. 데이리스트 같은 애.
             Cursor cursor = getReadableDatabase().rawQuery(sql, null);
             return cursorToSchedules(cursor);
 
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         } catch (ArrayIndexOutOfBoundsException e) {
             Log.e(TAG, e.getMessage());
@@ -145,54 +143,89 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public Schedule getLastSchedule() {
+    public ArrayList<Schedule> getSchedulesInDays(int year, int month, int[] days) {
         try {
-            String sql = "select * from schedules order by _id desc limit 1";
-            Cursor cursor = getReadableDatabase().rawQuery(sql, null);
-            return cursorToSchedules(cursor).get(0);
+            final int lastOfDays = days[days.length - 1];
+            if ( lastOfDays > days[0] ) {
+                String sql = f("select * from schedules where sch_year=%d and sch_month=%d and sch_date>=%d and sch_date<=%d", year, month, days[0], lastOfDays);
+                Cursor cursor = getReadableDatabase().rawQuery(sql, null);
+                ArrayList<Schedule> schedules = cursorToSchedules(cursor);
+                cursor.close();
+                return schedules;
+
+            } else {
+                int lastDay = -1;
+                for (int day : days) {
+                    if (lastDay < day) {
+                        lastDay = day;
+                        break;
+                    }
+                }
+                String sql1 = f("select * from schedules where sch_year=%d and sch_month=%d and sch_date>=%d and sch_date<=%d", year, month, days[0], lastDay);
+                String sql2;
+
+                if ( month == 11 ) {
+                    sql2 = f("select * from schedules where sch_year=%d and sch_month=%d and sch_date>=%d and sch_date<=%d",
+                            year + 1, 0, 1, lastOfDays);
+                } else {
+                    sql2 = f("select * from schedules where sch_year=%d and sch_month=%d and sch_date>=%d and sch_date<=%d",
+                            year, month + 1, 1, lastOfDays);
+                }
+
+                Cursor cursor = getReadableDatabase().rawQuery(sql1, null);
+                ArrayList<Schedule> schedules = cursorToSchedules(cursor);
+                cursor.close();
+
+                Cursor cursor2 = getReadableDatabase().rawQuery(sql2, null);
+                schedules.addAll(cursorToSchedules(cursor2));
+                cursor2.close();
+
+                return schedules;
+            }
+
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
             return null;
         }
     }
 
-    private void update(int _id, String column, String sValue, int iValue) {
+    public int upsertSchedule(Schedule s) {
         try {
-            String sql = String.format(
-                    Locale.KOREA,
-                    "update calendars set %s=%s where _id=%d",
-                    column,
-                    sValue != null ? '\'' + sValue + '\'' : Integer.toString(iValue),
-                    _id
-            );
-            getWritableDatabase().execSQL(sql);
+            Cursor cursor = getReadableDatabase().rawQuery("select title from schedules where _id=" + s._id, null);
+            if ( cursor.getCount() == 0 ) { // 새로운 값을 추가할 때
+                insertSchedule(s);
 
-        } catch (SQLException e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
-
-    public void updateSchedule(int _id, String column, String value) {
-        update(_id, column, value, -1);
-    }
-
-    public void updateSchedule(int _id, String column, int value) {
-        update(_id, column, null, value);
-    }
-
-    public void updateSchedule(int _id, Schedule schedule) {
-        try {
-            Object[] fields = schedule.toArray();
-            String s = "";
-            for (int i=0; i<columns[0].length; i++) {
-                s += columns[0][i] + "=" + (fields[i] instanceof String ? "\"" + fields[i] + "\"" : fields[i]);
-                if ( i != columns[0].length - 1 ) s += ',';
+            } else {
+                String sql = f(
+                        "update set title='%s',place='%s',memo='%s',sch_year=%d,sch_month=%d,sch_date=%d,start_hour=%d,start_minute=%d,end_hour=%d,end_minute=%d where _id=%d",
+                        s.title,
+                        s.place,
+                        s.memo,
+                        s.year,
+                        s.month,
+                        s.date,
+                        s.startHour,
+                        s.startMinute,
+                        s.endHour,
+                        s.endMinute,
+                        s._id
+                );
+                getWritableDatabase().execSQL(sql);
             }
-            String sql = "update calendars set " + s + " where _id=" + _id;
-            getWritableDatabase().execSQL(sql);
-        } catch (SQLException e) {
+            cursor.close();
+
+            Cursor cursor2 = getReadableDatabase().rawQuery("select _id from schedules order by _id desc limit 1", null);
+            cursor2.moveToFirst();
+
+            int _id = cursor2.getInt(0);
+            cursor2.close();
+            return _id;
+
+
+        } catch(SQLException e) {
             Log.e(TAG, e.getMessage());
         }
+        return -1;
     }
 
     public void deleteSchedule(int _id) {
@@ -210,8 +243,8 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] columnNames = c.getColumnNames();
         while (c.moveToNext()) {
             Schedule s = new Schedule();
-            for (String ss : c.getColumnNames()) Log.i(TAG, ss);
             int i = 0;
+            s._id = c.getInt(c.getColumnIndex(columnNames[i++]));
             s.title = c.getString(c.getColumnIndex(columnNames[i++]));
             s.place = c.getString(c.getColumnIndex(columnNames[i++]));
             s.memo = c.getString(c.getColumnIndex(columnNames[i++]));
@@ -224,6 +257,7 @@ public class DBHelper extends SQLiteOpenHelper {
             s.endMinute = c.getInt(c.getColumnIndex(columnNames[i]));
             scheduleList.add(s);
         }
+        c.close();
         return scheduleList;
     }
 }
