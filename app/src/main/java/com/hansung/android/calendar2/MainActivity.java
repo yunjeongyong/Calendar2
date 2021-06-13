@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // 일정들의 제목이 적힌 다이얼로그 띄움
                     AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                    dialog.setTitle(year + "." + month + "." + date + "일");
+                    dialog.setTitle(year + "." + (month+1) + "." + date + "일");
                     dialog.setItems(schedules, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

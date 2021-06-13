@@ -6,11 +6,6 @@
     tools:context=".WeekViewFragment"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-<!--    <TextView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:text="주간 달력" />-->
     <GridLayout
         android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
