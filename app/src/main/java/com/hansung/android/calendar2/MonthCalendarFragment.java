@@ -47,7 +47,6 @@ public class MonthCalendarFragment extends Fragment {
     // 각 블록은 LinearLayout 안에 TextView로 정의되어 있기 때문에, 블록 선택 시에는 TextView를 선택
     // 블록이 선택되었을 때 이전에 선택된 블록의 배경색은 다시 흰색으로 바꿔야 하기 떄문에 이전에 선택된 블록을 이 prevBlock에 저장
     // prevBlock의 첫 값은 이 달의 첫날
-//    private TextView prevBlock;
     private LinearLayout prevBlock;
 
     public MonthCalendarFragment() {
@@ -80,6 +79,8 @@ public class MonthCalendarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            MainActivity.fragment = MonthCalendarFragment.this;
+
             // 달력 데이터 배열은 총 42개 원소로 구성
             days = new String[7 * 6];
             // 전달받은 year와 month를 통해 iYear, iMonth 초기화
@@ -118,13 +119,13 @@ public class MonthCalendarFragment extends Fragment {
                     Toast.makeText(getActivity(), (iYear) + "." + (iMonth + 1) + "." + date + "일", Toast.LENGTH_SHORT).show();
                     ((MainActivity) getActivity()).setTitle(iYear + "년 " + (iMonth + 1) + "월");
 
-                    DateInfo.getInstance().setDate(date);
+                    DateInfo dateInfo = DateInfo.getInstance();
+                    dateInfo.setDate(date);
+                    dateInfo.setMonth(iMonth);
 
                     // 배경색을 바꾸기 위해 눌린 view로부터 TextView 가져옴
-//                    TextView textView = (TextView) view.findViewById(R.id.tv_item_gridview);
                     LinearLayout layout = view.findViewById(R.id.tv_layout);
                     // 배경색 변경
-//                    textView.setBackgroundColor(Color.CYAN);
                     layout.setBackgroundColor(Color.CYAN);
 
                     // 이전에 눌렸던 블록의 배경색을 흰색으로 변경

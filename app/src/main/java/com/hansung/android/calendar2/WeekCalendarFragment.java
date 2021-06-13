@@ -48,6 +48,8 @@ public class WeekCalendarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            MainActivity.fragment = WeekCalendarFragment.this;
+
             // 전달받은 인자들을 통해 iYear, iMonth 초기화
             iYear = getArguments().getInt(ARG_PARAM1);
             iMonth = getArguments().getInt(ARG_PARAM2);
@@ -110,7 +112,18 @@ public class WeekCalendarFragment extends Fragment {
 //                int y = position / 7;
 //                String message = day + "일 " + hour + "시 / position=(" + x + "," + y + ")";
 
-                DateInfo.getInstance().setHour(position / 7);
+                DateInfo dateInfo = DateInfo.getInstance();
+                dateInfo.setDate(daySeven[position % 7]);
+                dateInfo.setHour(position / 7);
+                if ( daySeven[0] > daySeven[position % 7] ) {
+                    int newMonth = iMonth + 1;
+                    if ( newMonth == 12 ) {
+                        dateInfo.setMonth(0);
+                        dateInfo.setYear(iYear + 1);
+                    } else {
+                        dateInfo.setMonth(newMonth);
+                    }
+                }
 
                 // "position=(눌린 블록의 x좌표)" 형태로 출력
                 Toast.makeText(getActivity(), "position=" + (position % 7), Toast.LENGTH_SHORT).show();

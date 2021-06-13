@@ -108,6 +108,7 @@ public class DBHelper extends SQLiteOpenHelper { //DB와 안드로이드를 연�
                     s.endHour,
                     s.endMinute
             );
+            Log.i(TAG, sql);
             getWritableDatabase().execSQL(sql);
 
         } catch(SQLException e) {
@@ -140,6 +141,7 @@ public class DBHelper extends SQLiteOpenHelper { //DB와 안드로이드를 연�
             }
 
             String sql = "select * from schedules" + where; //컬럼 전체를 표로부터 가져와라. schedules는 표, 테이블 이름이다. 데이리스트 같은 애.
+            Log.i(TAG, sql);
             Cursor cursor = getReadableDatabase().rawQuery(sql, null);
             return cursorToSchedules(cursor);
 

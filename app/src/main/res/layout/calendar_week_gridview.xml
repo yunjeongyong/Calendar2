@@ -9,7 +9,7 @@
         android:id="@+id/week_tv_item_gridview"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:textSize="20sp"
+        android:textSize="12sp"
         android:background="@color/white"
         />
 

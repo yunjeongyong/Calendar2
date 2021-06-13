@@ -1,6 +1,7 @@
 package com.hansung.android.calendar2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    public static Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +81,27 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // 다이얼로그의 항목을 누를 경우 일정의 id값을 intent에 추가
                             intent.putExtra("_id", scheduleList.get(i)._id);
+                            startActivityForResult(intent, 0);
                         }
                     });
+                    dialog.show();
                 } else if ( scheduleList.size() == 1 ) {    // 가져온 데이터가 1개일 경우 리스트의 0번째 항목의 id값을 intent에 추가
                     intent.putExtra("_id", scheduleList.get(0)._id);
+                    startActivityForResult(intent, 0);
+                } else {
+                    //가져온 데이터가 없으면 intent에 id값 추가하지 않음
+                    startActivityForResult(intent, 0);
                 }
-                //가져온 데이터가 없으면 intent에 id값 추가하지 않음
-
-                // ScheduleActivity 실행
-                startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FragmentTransaction ft = fragment.getFragmentManager().beginTransaction();
+        ft.detach(fragment).attach(fragment).commit();
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
