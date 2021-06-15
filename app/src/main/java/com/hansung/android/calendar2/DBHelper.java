@@ -250,7 +250,7 @@ public class DBHelper extends SQLiteOpenHelper { //DB와 안드로이드를 연�
     // _id를 바탕으로 값 삭제
     public void deleteSchedule(int _id) {
         try {
-            String sql = "delete from calendars where _id=" + _id;
+            String sql = "delete from schedules where _id=" + _id;
             getWritableDatabase().execSQL(sql);
 
         } catch (SQLException e) {

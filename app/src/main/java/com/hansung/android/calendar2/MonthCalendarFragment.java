@@ -27,7 +27,7 @@ import java.util.List;
  * Use the {@link MonthCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MonthCalendarFragment extends Fragment implements  CalendarFragment {
+public class MonthCalendarFragment extends Fragment implements CalendarFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -151,9 +151,8 @@ public class MonthCalendarFragment extends Fragment implements  CalendarFragment
         schedules = helper.getSchedules("sch_year", iYear, "sch_month", iMonth);
         GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext(), days, schedules, position);
 
-        gridView.setAdapter(gridAdapter); //그리드뷰에 어댑터설정.
         gridView.invalidateViews();
-        gridView.setAdapter(gridAdapter);
+        gridView.setAdapter(gridAdapter);   //그리드뷰에 어댑터설정.
     }
 
     // 달력 GridView의 데이터를 채워넣기 위한 GridAdapter 내부클래스

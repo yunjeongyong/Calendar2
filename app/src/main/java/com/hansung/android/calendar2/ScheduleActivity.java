@@ -184,23 +184,24 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View view) {
                 // 컨펌 다이얼로그를 띄워 '예'를 누르면 삭제, '아니오'를 누르면 아무 작업 안함
-                new AlertDialog.Builder(ScheduleActivity.this.getApplicationContext())
-                        .setTitle("삭제")
-                        .setMessage("정말 삭제하시겠습니까?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // _id 값이 있다면 (-1이 아니라면) helper를 통해 DB에서 그 _id에 해당하는 값 삭제
-                                // _id 값이 없다면 DB에서 삭제할 게 없다는 말이므로 아무것도 하지 않음
-                                if ( _id != -1 ) helper.deleteSchedule(_id);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(ScheduleActivity.this);
+                dialog.setTitle("삭제");
+                dialog.setMessage("정말 삭제하시겠습니까?");
+                dialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // _id 값이 있다면 (-1이 아니라면) helper를 통해 DB에서 그 _id에 해당하는 값 삭제
+                        // _id 값이 없다면 DB에서 삭제할 게 없다는 말이므로 아무것도 하지 않음
+                        if ( _id != -1 ) helper.deleteSchedule(_id);
 
-                                Toast.makeText(ScheduleActivity.this.getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScheduleActivity.this.getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
 
-                                // 삭제 작업 후 액티비티 종료
-                                ScheduleActivity.this.finish();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null);
+                        // 삭제 작업 후 액티비티 종료
+                        ScheduleActivity.this.finish();
+                    }
+                });
+                dialog.setNegativeButton(android.R.string.no, null);
+                dialog.show();
             }
         });
 
@@ -245,6 +246,11 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
                 }
                 catch (IOException e) {
                     Log.e("[[ScheduleActivity]]", e.getMessage());
+                }
+
+                if ( addressList == null ) {
+                    Toast.makeText(getApplicationContext(),"에러가 발생했습니다. 인터넷 연결 상태를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 if ( addressList.isEmpty() ) {

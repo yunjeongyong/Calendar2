@@ -175,9 +175,8 @@ public class WeekCalendarFragment extends Fragment implements CalendarFragment {
         schedules = helper.getSchedules("sch_year", iYear, "sch_month", iMonth);
         ScheduleAdapter gridAdapter = new ScheduleAdapter(getActivity().getApplicationContext(), schedules, position);
 
-        gridView.setAdapter(gridAdapter); //그리드뷰에 어댑터설정.
         gridView.invalidateViews();
-        gridView.setAdapter(gridAdapter);
+        gridView.setAdapter(gridAdapter); //그리드뷰에 어댑터설정.
     }
 
     // newInstance 메소드에서는 파라미터로 주간 달력의 날짜 7개, 년, 월 정보를 입력 받음
