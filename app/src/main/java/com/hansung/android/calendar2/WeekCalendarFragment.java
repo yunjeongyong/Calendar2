@@ -261,7 +261,7 @@ public class WeekCalendarFragment extends Fragment implements CalendarFragment {
 
             // schedules 리스트로부터 블록의 날짜, 시간에 해당하는 일정을 labels[position]에 더함
             for (Schedule s : schedules) {
-                if ( s.date == daySeven[position % 7] && s.startHour == position / 7 ) {
+                if ( s.date == daySeven[position % 7] && s.startHour == position / 7 ) { //db에 이 날짜에 일정이 있느냐?>
                     // 여러 일정이 있을 경우 \n으로 구분
                     labels[position] += s.title + '\n';
                 }

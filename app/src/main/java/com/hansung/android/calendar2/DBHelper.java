@@ -164,7 +164,7 @@ public class DBHelper extends SQLiteOpenHelper { //DB와 안드로이드를 연�
             // days 배열의 마지막 원소
             final int lastOfDays = days[days.length - 1];
             // 마지막 원소가 첫번째 원소보다 크다는 것은 월이 바뀌지 않는다는 것
-            if ( lastOfDays > days[0] ) {
+            if ( lastOfDays > days[0] ) {// 정상적인 케이스
                 String sql = f("select * from schedules where sch_year=%d and sch_month=%d and sch_date>=%d and sch_date<=%d", year, month, days[0], lastOfDays);
                 Cursor cursor = getReadableDatabase().rawQuery(sql, null);
                 ArrayList<Schedule> schedules = cursorToSchedules(cursor);
