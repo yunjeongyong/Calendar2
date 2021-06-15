@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    public static Fragment fragment;
+    public static CalendarFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +99,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        FragmentTransaction ft = fragment.getFragmentManager().beginTransaction();
-        ft.detach(fragment).attach(fragment).commit();
-
+        fragment.refresh();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

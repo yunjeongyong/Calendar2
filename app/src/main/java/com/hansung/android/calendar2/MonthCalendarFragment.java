@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,13 +27,17 @@ import java.util.List;
  * Use the {@link MonthCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MonthCalendarFragment extends Fragment {
+public class MonthCalendarFragment extends Fragment implements  CalendarFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     // 다른 fragment들과의 통신에서 'year', 'month' 파라미터를 주고 받기 때문에 ARG_PARAM1은 year, ARG_PARAM2는 month로 정의
     private static final String ARG_PARAM1 = "year";
     private static final String ARG_PARAM2 = "month";
+
+    private DBHelper helper;
+    private GridView gridView;
+    private int position;
 
     // TODO: Rename and change types of parameters
     private int iYear;      // 입력받은 년
@@ -91,7 +96,7 @@ public class MonthCalendarFragment extends Fragment {
 
             setCalendar(iYear, iMonth); //mYear와 mMonth를 바탕으로 days에 데이터를 채움.
 
-            DBHelper helper = new DBHelper(getActivity().getApplicationContext(), "calendar.db", null, 1);
+            helper = new DBHelper(getActivity().getApplicationContext(), "calendar.db", null, 1);
             schedules = helper.getSchedules("sch_year", iYear, "sch_month", iMonth);
         }
     }
@@ -105,7 +110,7 @@ public class MonthCalendarFragment extends Fragment {
 
         //그리드 어댑터에 날짜 배열(days)을 넣어줌.
         GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext(), days, schedules);
-        GridView gridView = v.findViewById(R.id.gridview);
+        gridView = v.findViewById(R.id.gridview);
         gridView.setAdapter(gridAdapter); //그리드뷰에 어댑터설정.
 
         // 월간 달력의 블록을 선택할 경우 토스트 메시지를 띄우고 배경색을 CYAN으로 변경하는 이벤트 리스너 추가
@@ -132,11 +137,23 @@ public class MonthCalendarFragment extends Fragment {
                     prevBlock.setBackgroundColor(Color.WHITE);
                     // 현재 눌린 블록을 prevBlock으로 설정
                     prevBlock = layout;
+
+                    MonthCalendarFragment.this.position = position;
                 }
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void refresh() {
+        schedules = helper.getSchedules("sch_year", iYear, "sch_month", iMonth);
+        GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext(), days, schedules, position);
+
+        gridView.setAdapter(gridAdapter); //그리드뷰에 어댑터설정.
+        gridView.invalidateViews();
+        gridView.setAdapter(gridAdapter);
     }
 
     // 달력 GridView의 데이터를 채워넣기 위한 GridAdapter 내부클래스
@@ -148,6 +165,8 @@ public class MonthCalendarFragment extends Fragment {
         private final LayoutInflater inflater;
         // 일정 데이터 리스트
         private final ArrayList<Schedule> schedules;
+        // 미리 눌려있을 위치를 지정하기 위한 변수
+        private int selected;
 
         public GridAdapter(Context context, String[] days, ArrayList<Schedule> schedules) {
             //context에서 LayoutInflater 가져옴.
@@ -156,6 +175,19 @@ public class MonthCalendarFragment extends Fragment {
             this.days = days;
             // 매개변수로 입력 받은 schedules로 schedules 리스트 초기화
             this.schedules = schedules;
+            // 첫날이 눌려있는 경우이므로 firstDay 변수로 초기화
+            this.selected = firstDay;
+        }
+
+        public GridAdapter(Context context, String[] days, ArrayList<Schedule> schedules, int selected) {
+            //context에서 LayoutInflater 가져옴.
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            // 매개변수로 입력 받은 days로 days 배열 초기화.
+            this.days = days;
+            // 매개변수로 입력 받은 schedules로 schedules 리스트 초기화
+            this.schedules = schedules;
+            // 입력받은 selected를 통해 selected 초기화
+            this.selected = selected;
         }
 
         // 배열 크기 반환
@@ -199,7 +231,11 @@ public class MonthCalendarFragment extends Fragment {
             for (int i = 0; i < schedules.size() && cursor < scheduleViews.length; i++) {
                 try {
                     if ( schedules.get(i).date == Integer.parseInt(days[position]) ) {
-                        scheduleViews[cursor].setText(schedules.get(i).title);
+                        String title = schedules.get(i).title;
+                        final int cut = 6;
+                        if ( title.length() > cut ) title = title.substring(0, cut) + "...";
+
+                        scheduleViews[cursor].setText(title);
                         scheduleViews[cursor].setBackgroundColor(colors[cursor]);
                         scheduleViews[cursor].setVisibility(View.VISIBLE);
                         cursor++;
@@ -209,7 +245,7 @@ public class MonthCalendarFragment extends Fragment {
                 }
             }
 
-            if ( position == firstDay ) {   // 첫날의 데이터를 넣는 중일 경우 배경색을 CYAN으로 설정 및 prevBlock에 이 블록 저장
+            if ( position == selected ) {   // 첫날의 데이터를 넣는 중일 경우 배경색을 CYAN으로 설정 및 prevBlock에 이 블록 저장
                 layout.setBackgroundColor(Color.CYAN);
                 prevBlock = layout;
             }

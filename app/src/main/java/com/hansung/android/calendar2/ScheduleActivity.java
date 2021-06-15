@@ -167,6 +167,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
                 _id = helper.upsertSchedule(schedule);
                 schedule._id = _id;
                 Toast.makeText(ScheduleActivity.this.getApplicationContext(), "저장되었습니다.", Toast.LENGTH_SHORT).show();
+                ScheduleActivity.this.finish();
             }
         });
 
