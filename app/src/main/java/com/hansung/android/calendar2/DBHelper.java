@@ -75,7 +75,7 @@ public class DBHelper extends SQLiteOpenHelper { //DB와 안드로이드를 연�
         for (int i=0; i<last; i++) sqlBuilder.append(t.generateInsertPhrase(columns[0][i], columns[1][i]));
         sqlBuilder.append(t.generateInsertPhrase(columns[0][last], columns[1][last], true));
         sqlBuilder.append(')');
-        db.execSQL("drop table if exists schedules"); // 디버깅을 위한 코드로, 앱이 실행될 때마다 테이블이 존재하면 삭제 및 재생성
+//        db.execSQL("drop table if exists schedules"); // 디버깅을 위한 코드로, 앱이 실행될 때마다 테이블이 존재하면 삭제 및 재생성
         db.execSQL(sqlBuilder.toString());
     }
 

@@ -95,6 +95,7 @@ public class MonthCalendarFragment extends Fragment implements CalendarFragment 
             ((MainActivity) getActivity()).setTitle(iYear + "년 " + (iMonth + 1) + "월"); // 앱바 타이틀 설정
 
             setCalendar(iYear, iMonth); //mYear와 mMonth를 바탕으로 days에 데이터를 채움.
+            position = firstDay;
 
             helper = new DBHelper(getActivity().getApplicationContext(), "calendar.db", null, 1);
             schedules = helper.getSchedules("sch_year", iYear, "sch_month", iMonth);
@@ -227,8 +228,8 @@ public class MonthCalendarFragment extends Fragment implements CalendarFragment 
             int[] colors = { Color.GREEN, Color.CYAN };
             int cursor = 0;
 
-            for (int i = 0; i < schedules.size() && cursor < scheduleViews.length; i++) {
-                try {
+            try {
+                for (int i = 0; i < schedules.size() && cursor < scheduleViews.length; i++) {
                     if ( schedules.get(i).date == Integer.parseInt(days[position]) ) {
                         String title = schedules.get(i).title;
                         final int cut = 6;
@@ -239,9 +240,9 @@ public class MonthCalendarFragment extends Fragment implements CalendarFragment 
                         scheduleViews[cursor].setVisibility(View.VISIBLE);
                         cursor++;
                     }
-                } catch (NumberFormatException e) {
-                    // days[position]이 공백일 경우 (무시)
                 }
+            } catch (NumberFormatException e) {
+                // days[position]이 공백일 경우 (무시)
             }
 
             if ( position == selected ) {   // 첫날의 데이터를 넣는 중일 경우 배경색을 CYAN으로 설정 및 prevBlock에 이 블록 저장
